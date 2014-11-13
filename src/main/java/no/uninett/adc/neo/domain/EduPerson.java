@@ -29,6 +29,13 @@ public class EduPerson extends EduObject {
 		feideId = feide;
 	}
 
+	public ChangeSet diff() {
+		ChangeSet atts = EduObject.diff(null, this);
+		Set<Change> ents = diffEnt(null);
+		atts = merge(atts, ents);
+		return atts;
+	}
+
 	public ChangeSet diff(EduPerson neW) {
 		ChangeSet atts = EduObject.diff(this, neW);
 		Set<Change> ents = diffEnt(neW);

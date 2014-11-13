@@ -31,9 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RepositoryTest {
 
-	static final String SORENK_UNINETT_NO = "sorenk@uninett.no";
-	private static final String ARMAZ_UNINETT_NO = "armaz@uninett.no";
-	private static final String RUNEMY_UNINETT_NO = "runemy@uninett.no";
+	private static final String ENTITLEMENT = "a_entitlement";
+	private static final String PERSON1 = "soren";
+	private static final String PERSON2 = "person2";
+	private static final String PERSON3 = "person3";
 	@Autowired
 	private Neo4jTemplate template;
 
@@ -48,19 +49,22 @@ public class RepositoryTest {
 			throw new AssertionFailedError("Template not initialized!");
 		}
 		if (repo == null) {
-			throw new AssertionFailedError("repository not initialized!");
+			throw new AssertionFailedError("person-repository not initialized!");
+		}
+		if (orgRepo == null) {
+			throw new AssertionFailedError("org-repository not initialized!");
 		}
 	}
 
 	@Test
 	@Transactional
 	public void thereShouldBeJustOneEntitlement() {
-		final EduPerson p1 = getSoren();
-		Entitlement ent = new Entitlement("agresso");
+		final EduPerson p1 = new EduPerson(PERSON1);
+		Entitlement ent = new Entitlement(ENTITLEMENT);
 		p1.add(ent);
 		final EduPerson soren = repo.save(p1);
-		final EduPerson p2 = new EduPerson(ARMAZ_UNINETT_NO);
-		ent = new Entitlement("agresso");
+		final EduPerson p2 = new EduPerson(PERSON2);
+		ent = new Entitlement(ENTITLEMENT);
 		p2.add(ent);
 		final EduPerson armaz = repo.save(p2);
 
@@ -78,18 +82,18 @@ public class RepositoryTest {
 	@Test
 	@Transactional
 	public void thereShouldBeAPersonWithGivenEntitlement() {
-		final EduPerson p1 = getSoren();
-		final Entitlement ent = new Entitlement("agresso");
+		final EduPerson p1 = new EduPerson(PERSON1);
+		final Entitlement ent = new Entitlement(ENTITLEMENT);
 		p1.add(ent);
 		final EduPerson soren = repo.save(p1);
-		Set<EduPerson> ps = repo.findPersonWithEntitlement("agresso");
+		Set<EduPerson> ps = repo.findPersonWithEntitlement(ENTITLEMENT);
 		assertEquals("there shall be a person in the collection ", 1, ps.size());
 		final EduPerson read = ps.iterator().next();
 		assertEquals(soren, read);
-		final EduPerson p2 = new EduPerson(ARMAZ_UNINETT_NO);
+		final EduPerson p2 = new EduPerson(PERSON2);
 		p2.add(ent);
 		final EduPerson armaz = repo.save(p2);
-		ps = repo.findPersonWithEntitlement("agresso");
+		ps = repo.findPersonWithEntitlement(ENTITLEMENT);
 		assertEquals("there shall be two person in the collection ", 2, ps.size());
 		final Set<EduPerson> orig = new HashSet<EduPerson>();
 		orig.add(soren);
@@ -102,23 +106,22 @@ public class RepositoryTest {
 	public void thereShouldBeOnlyPersonWithEntitlementAndOrg() {
 		EduOrg uni = getUninettOrg();
 		uni = orgRepo.save(uni);
-		final EduPerson p1 = getSoren();
-		final Entitlement ent = new Entitlement("agresso");
+		final EduPerson p1 = new EduPerson(PERSON1);
+		final Entitlement ent = new Entitlement(ENTITLEMENT);
 		p1.add(ent);
 		p1.setOrg(uni);
 		final EduPerson soren = repo.save(p1);
-		final EduPerson p2 = new EduPerson(ARMAZ_UNINETT_NO);
-
+		final EduPerson p2 = new EduPerson(PERSON2);
 		p2.add(ent);
-		final EduPerson armaz = repo.save(p2);
-		final EduPerson p3 = new EduPerson(RUNEMY_UNINETT_NO);
+		repo.save(p2);
+		final EduPerson p3 = new EduPerson(PERSON3);
 		p3.setOrg(uni);
-		Set<EduPerson> ps = repo.findByEntitlementAndOrg("agresso", uni);
+		Set<EduPerson> ps = repo.findByEntitlementAndOrg(ENTITLEMENT, uni);
 		assertEquals("there shall be one person in the collection ", 1, ps.size());
 		Set<EduPerson> orig = new HashSet<EduPerson>();
 		orig.add(soren);
 		assertEquals(orig, ps);
-		ps = repo.findByEntitlementAndOrg("agresso", uni.getOrgNIN());
+		ps = repo.findByEntitlementAndOrg(ENTITLEMENT, uni.getOrgNIN());
 		assertEquals("there shall be one person in the collection ", 1, ps.size());
 		orig = new HashSet<EduPerson>();
 		orig.add(soren);
@@ -128,7 +131,7 @@ public class RepositoryTest {
 	@Test
 	@Transactional
 	public void persistedPersShouldBeRetrievableById() {
-		final EduPerson p = getSoren();
+		final EduPerson p = new EduPerson(PERSON1);
 		final EduPerson soren = repo.save(p);
 		final EduPerson retrievedP = repo.findOne(soren.getId());
 		assertEquals("retrieved org matches persisted one", soren, retrievedP);
@@ -137,21 +140,22 @@ public class RepositoryTest {
 	@Test
 	@Transactional
 	public void persistedPersShouldBeRetrievableByFeideId() {
-		final EduPerson p = getSoren();
+		final EduPerson p = new EduPerson(PERSON1);
 		final EduPerson soren = repo.save(p);
-		EduPerson retrievedP = repo.findBySchemaPropertyValue("feideId", SORENK_UNINETT_NO);
+		EduPerson retrievedP = repo
+				.findBySchemaPropertyValue("feideId", PERSON1);
 		assertEquals("retrieved org matches persisted one", soren, retrievedP);
-		retrievedP = repo.findByFeideId(SORENK_UNINETT_NO);
+		retrievedP = repo.findByFeideId(PERSON1);
 		assertEquals("retrieved org matches persisted one", soren, retrievedP);
-		retrievedP = repo.findFeide(SORENK_UNINETT_NO);
+		retrievedP = repo.findFeide(PERSON1);
 		assertEquals("retrieved org matches persisted one", soren, retrievedP);
 	}
 
 	@Test
 	@Transactional
 	public void persistedPersShouldKeepEntitlement() {
-		final EduPerson p = getSoren();
-		final Entitlement ent = new Entitlement("agresso");
+		final EduPerson p = new EduPerson(PERSON1);
+		final Entitlement ent = new Entitlement(ENTITLEMENT);
 		p.add(ent);
 		final EduPerson soren = repo.save(p);
 		final EduPerson retrievedP = repo.findOne(soren.getId());
@@ -180,7 +184,7 @@ public class RepositoryTest {
 	@Transactional
 	public void orgWithPersonShallHavePerson() {
 		final EduOrg org = getUninettOrg();
-		final EduPerson emp = getSoren();
+		final EduPerson emp = new EduPerson(PERSON1);
 		emp.setOrg(org);
 		org.addEmployee(emp);
 		final EduOrg uni = orgRepo.save(org);
@@ -201,15 +205,10 @@ public class RepositoryTest {
 		return org;
 	}
 
-	private EduPerson getSoren() {
-		final EduPerson p1 = new EduPerson(SORENK_UNINETT_NO);
-		return p1;
-	}
-
 	@Test
 	@Transactional
 	public void addAndRemoveAttributesToPerson() {
-		final EduPerson p1 = getSoren();
+		final EduPerson p1 = new EduPerson(PERSON1);
 		final Attribute val = new Attribute("cn", "Søren Krum");
 		p1.addAttribute(val);
 		EduPerson soren = repo.save(p1);
