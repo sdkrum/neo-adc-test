@@ -29,9 +29,9 @@ public interface EduPersonRepository extends GraphRepository<EduPerson> {
 
 	@Query("MATCH (ent:Entitlement{entitlement:{0}})<-[:ENTITLED]-(person) return person")
 	Set<EduPerson> findPersonWithEntitlement(String entitlement);
-	
+
 	//@Query("MATCH (ent:Entitlement{entitlement:{0}})<-[:ENTITLED]-(person)-[:WORKS_FOR_ORG]->(org:EduOrg{1}) return person")
-	@Query("start org=node({1}) match org<-[:WORKS_FOR_ORG]-person-[:ENTITLED]->(ent:Entitlement{entitlement:{0}}) return person")
+	@Query("START org=node({1}) MATCH org<-[:WORKS_FOR_ORG]-person-[:ENTITLED]->(ent:Entitlement{entitlement:{0}}) return person")
 	Set<EduPerson> findByEntitlementAndOrg(String entitlement, EduOrg org);
 
 	@Query("MATCH (org:EduOrg{orgNIN:{1}})<-[:WORKS_FOR_ORG]-person-[:ENTITLED]->(ent:Entitlement{entitlement:{0}}) return person")

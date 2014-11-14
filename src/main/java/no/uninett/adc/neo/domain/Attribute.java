@@ -55,7 +55,7 @@ public class Attribute {
 		return value;
 	}
 
-	void setValue(final String value, final boolean hashIt) {
+	private void setValue(final String value, final boolean hashIt) {
 		if (hashIt) {
 			try {
 				this.value = hash(value);
@@ -71,10 +71,6 @@ public class Attribute {
 
 	public boolean isHashed() {
 		return hashed;
-	}
-
-	public void setHashed(final boolean hashed) {
-		this.hashed = hashed;
 	}
 
 	private String hash(final String in) {
@@ -115,6 +111,11 @@ public class Attribute {
 
 	public void setKey(final String key) {
 		this.key = new AttributeKey(key);
+	}
+
+	@Override
+	public String toString() {
+		return "Attribute [id=" + id + ", key=" + key + ", value=" + value + "]";
 	}
 
 }

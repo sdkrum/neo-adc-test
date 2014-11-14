@@ -1,5 +1,6 @@
 package no.uninett.adc.neo.domain;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class EduPerson extends EduObject {
 	@Fetch
 	Set<Entitlement> entitlements;
 	@RelatedTo(type = "WORKS_FOR_ORG", direction = Direction.OUTGOING)
+	@Fetch
 	EduOrg org;
 
 	@Deprecated
@@ -25,25 +27,25 @@ public class EduPerson extends EduObject {
 
 	}
 
-	public EduPerson(String feide) {
+	public EduPerson(final String feide) {
 		feideId = feide;
 	}
 
 	public ChangeSet diff() {
 		ChangeSet atts = EduObject.diff(null, this);
-		Set<Change> ents = diffEnt(null);
+		final Set<Change> ents = diffEnt();
 		atts = merge(atts, ents);
 		return atts;
 	}
 
-	public ChangeSet diff(EduPerson neW) {
+	public ChangeSet diff(final EduPerson neW) {
 		ChangeSet atts = EduObject.diff(this, neW);
-		Set<Change> ents = diffEnt(neW);
+		final Set<Change> ents = diffEnt(neW);
 		atts = merge(atts, ents);
 		return atts;
 	}
 
-	private ChangeSet merge(ChangeSet atts, Set<Change> ents) {
+	private ChangeSet merge(final ChangeSet atts, final Set<Change> ents) {
 		ChangeSet ret = atts;
 		if (ents != null && !ents.isEmpty()) {
 			if (ret == null) {
@@ -58,19 +60,29 @@ public class EduPerson extends EduObject {
 		return ret;
 	}
 
-	private Set<Change> diffEnt(EduPerson neW) {
-		Set<Change> changes = new HashSet<Change>(2);
-		if (!this.isActive() || neW == null || !neW.isActive()) {
-			return changes;
+	private Set<Change> diffEnt() {
+		final Set<Change> changes = new HashSet<Change>(2);
+		for (final Entitlement ent : getEntitlements()) {
+			changes.add(new EntitlementChange(ChangeOperation.CREATE, ent));
 		}
-		for (Entitlement ent : getEntitlements()) {
-			Set<Entitlement> newEnt = neW.getEntitlements();
+		return changes;
+	}
+
+	private Set<Change> diffEnt(final EduPerson neW) {
+		Set<Entitlement> newEnt = null;
+		final Set<Change> changes = new HashSet<Change>(2);
+		if ( neW == null ) {
+			newEnt = Collections.emptySet();
+		} else {
+			newEnt = neW.getEntitlements();
+		}
+		for (final Entitlement ent : getEntitlements()) {
 			if (!newEnt.contains(ent)) {
 				changes.add(new EntitlementChange(ChangeOperation.DELETE, ent));
 			}
 		}
-		for (Entitlement ent : neW.getEntitlements()) {
-			Set<Entitlement> oldEnt = getEntitlements();
+		for (final Entitlement ent : newEnt) {
+			final Set<Entitlement> oldEnt = getEntitlements();
 			if (!oldEnt.contains(ent)) {
 				changes.add(new EntitlementChange(ChangeOperation.CREATE, ent));
 			}
@@ -139,7 +151,7 @@ public class EduPerson extends EduObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -150,7 +162,7 @@ public class EduPerson extends EduObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

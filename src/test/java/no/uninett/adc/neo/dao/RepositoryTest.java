@@ -58,6 +58,19 @@ public class RepositoryTest {
 
 	@Test
 	@Transactional
+	public void testQueriesEduOrgRepo() {
+		final EduOrg org = getUninettOrg();
+		orgRepo.getAllSystems(org);
+		orgRepo.getEmployees(org);
+		orgRepo.getPersonWithAttribute(org, new Attribute("key", "value"));
+		orgRepo.getPersonWithAttribute(org.getOrgNIN(), new Attribute("key", "value"));
+		orgRepo.getPersonWithAttributeKey(org.getOrgNIN(), "key");
+		orgRepo.getSelectedSystems(org);
+		orgRepo.getSelectedSystemsDefaultFlag(org, false);
+	}
+
+	@Test
+	@Transactional
 	public void thereShouldBeJustOneEntitlement() {
 		final EduPerson p1 = new EduPerson(PERSON1);
 		Entitlement ent = new Entitlement(ENTITLEMENT);

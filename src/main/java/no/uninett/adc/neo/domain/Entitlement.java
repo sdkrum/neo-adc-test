@@ -18,11 +18,12 @@ public class Entitlement {
 	@RelatedTo(type = "ENTITLED", direction = Direction.INCOMING)
 	private Set<EduPerson> persons;
 
+	@Deprecated
 	public Entitlement() {
 	}
 
-	public Entitlement(String string) {
-		this.entitlement = string;
+	public Entitlement(final String string) {
+		entitlement = string;
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Entitlement {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -48,11 +49,11 @@ public class Entitlement {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -62,7 +63,7 @@ public class Entitlement {
 		if (!(obj instanceof Entitlement)) {
 			return false;
 		}
-		Entitlement other = (Entitlement) obj;
+		final Entitlement other = (Entitlement) obj;
 		if (entitlement == null) {
 			if (other.entitlement != null) {
 				return false;
@@ -84,7 +85,7 @@ public class Entitlement {
 	 * @param entitlement
 	 *            the entitlement to set
 	 */
-	public void setEntitlement(String entitlement) {
+	public void setEntitlement(final String entitlement) {
 		this.entitlement = entitlement;
 	}
 
@@ -94,5 +95,5 @@ public class Entitlement {
 	public Set<EduPerson> getPersons() {
 		return persons;
 	}
-	
+
 }

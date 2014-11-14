@@ -4,6 +4,8 @@ import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
+//TODO should that be an enumeration???
+
 @NodeEntity
 public class AttributeKey {
 
@@ -15,7 +17,6 @@ public class AttributeKey {
 
 	@Deprecated
 	public AttributeKey() {
-
 	}
 
 	public AttributeKey(final String key) {
