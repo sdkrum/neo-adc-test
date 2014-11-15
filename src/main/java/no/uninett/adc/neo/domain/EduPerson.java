@@ -15,10 +15,10 @@ public class EduPerson extends EduObject {
 
 	@Indexed(unique = true)
 	String feideId;
-	@RelatedTo(type = "ENTITLED", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.IS_ENTITLET, direction = Direction.OUTGOING)
 	@Fetch
 	Set<Entitlement> entitlements;
-	@RelatedTo(type = "WORKS_FOR_ORG", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.WORKS_FOR_ORG, direction = Direction.OUTGOING)
 	@Fetch
 	EduOrg org;
 
@@ -109,6 +109,9 @@ public class EduPerson extends EduObject {
 	 * @return the entitlements
 	 */
 	public Set<Entitlement> getEntitlements() {
+		if (entitlements == null) {
+			entitlements = new HashSet<Entitlement>(5);
+		}
 		return entitlements;
 	}
 

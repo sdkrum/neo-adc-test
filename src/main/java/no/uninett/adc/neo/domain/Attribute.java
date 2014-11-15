@@ -11,13 +11,14 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 @NodeEntity
 public class Attribute {
 
+
 	@GraphId
 	private Long id;
 
-	@RelatedTo(type = "HAS_ATTRIBUTE", direction = Direction.INCOMING)
+	@RelatedTo(type = RelationshipType.HAS_ATTRIBUTE, direction = Direction.INCOMING)
 	private EduObject object;
 
-	@RelatedTo(type = "HAS_KEY", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.HAS_KEY, direction = Direction.OUTGOING)
 	@Fetch
 	private AttributeKey key;
 

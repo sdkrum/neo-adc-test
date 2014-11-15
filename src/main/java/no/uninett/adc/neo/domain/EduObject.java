@@ -17,7 +17,7 @@ public abstract class EduObject {
 
 	private boolean active = true;
 
-	@RelatedTo(type = "HAS_ATTRIBUTE", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.HAS_ATTRIBUTE, direction = Direction.OUTGOING)
 	@Fetch
 	Set<Attribute> attributes;
 
@@ -56,7 +56,7 @@ public abstract class EduObject {
 	private ChangeSet diffForUpdate(EduObject theNew) {
 		Set<Change> changes = new HashSet<Change>();
 		boolean found = false;
-		for (Attribute att : attributes) {
+		for (Attribute att : getAttributes()) {
 			for (Attribute oAtt : theNew.getAttributes()) {
 				if (att.getKey().equals(oAtt.getKey())) {
 					if (!att.valueEquals(oAtt)) {

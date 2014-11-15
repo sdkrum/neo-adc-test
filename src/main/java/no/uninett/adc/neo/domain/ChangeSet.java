@@ -22,13 +22,13 @@ public class ChangeSet {
 	@GraphProperty(propertyType = Integer.class)
 	private ChangeOperation operation;
 
-	@RelatedTo(type = "CHANGE_OF_OBJECT", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.CHANGESET_FOR_OBJECT, direction = Direction.OUTGOING)
 	private EduObject eduObject;
 
-	@RelatedTo(type = "CHANGE", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.INCLUDES_CHANGE, direction = Direction.OUTGOING)
 	private Set<Change> changes = new HashSet<Change>();
 
-	@RelatedTo(type = "CHANGE_STATE", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.HAS_STATE, direction = Direction.OUTGOING)
 	@Fetch
 	private Set<ChangeState> changeStates = new HashSet<ChangeState>();
 

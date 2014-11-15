@@ -13,7 +13,7 @@ public class EduOrg extends EduObject {
 
 	@Indexed(unique = true)
 	private String orgNIN;
-	@RelatedTo(type="WORKS_FOR_ORG",direction = Direction.INCOMING)
+	@RelatedTo(type = RelationshipType.WORKS_FOR_ORG, direction = Direction.INCOMING)
 	private Set<EduPerson> employees = new HashSet<EduPerson>();
 
 	public void addEmployee(final EduPerson emp) {

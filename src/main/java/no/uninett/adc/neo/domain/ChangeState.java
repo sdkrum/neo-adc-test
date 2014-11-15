@@ -13,9 +13,10 @@ public class ChangeState {
 	@GraphProperty(propertyType = Integer.class)
 	private ChangeStateCode stateCode;
 	private String text;
-	private String systemUrn;
+
 	private Date dateUpdated;
 	private int errorCount;
+	private SystemURN urn;
 
 	public Long getId() {
 		return id;
@@ -41,12 +42,12 @@ public class ChangeState {
 		this.text = text;
 	}
 
-	public String getSystemUrn() {
-		return systemUrn;
+	public SystemURN getSystemUrn() {
+		return urn;
 	}
 
-	public void setSystemUrn(final String systemUrn) {
-		this.systemUrn = systemUrn;
+	public void setSystemUrn(final SystemURN systemUrn) {
+		this.urn = systemUrn;
 	}
 
 	public Date getDateUpdated() {
@@ -67,7 +68,8 @@ public class ChangeState {
 
 	@Override
 	public String toString() {
-		return "ChangeState for urn: " + systemUrn + ": " + stateCode.toString();
+		return "ChangeState for urn: " + urn.getUrn() + ": "
+				+ stateCode.toString();
 	}
 
 }

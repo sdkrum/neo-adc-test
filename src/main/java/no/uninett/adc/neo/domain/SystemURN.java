@@ -14,7 +14,6 @@ public class SystemURN {
 
 	@Deprecated
 	public SystemURN() {
-
 	}
 
 	public SystemURN(final String urn) {

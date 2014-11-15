@@ -8,16 +8,17 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 @NodeEntity
 public class OrgSystem {
 
+
 	@GraphId
 	private Long id;
 
-	@RelatedTo(type = "SYSTEM_FOR_ORG", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.SYSTEM_FOR_ORG, direction = Direction.OUTGOING)
 	private EduOrg org;
 
-	@RelatedTo(type = "SYSTEM_ENTITLEMENT", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.SYSTEM_FOR_ENTITLEMENT, direction = Direction.OUTGOING)
 	private Entitlement entitlement;
 
-	@RelatedTo(type = "SYSTEM_URN", direction = Direction.OUTGOING)
+	@RelatedTo(type = RelationshipType.SYSTEM_URN, direction = Direction.OUTGOING)
 	private SystemURN urn;
 
 	private boolean selected;

@@ -15,7 +15,7 @@ public class Entitlement {
 	private Long id;
 	@Indexed(unique = true)
 	private String entitlement;
-	@RelatedTo(type = "ENTITLED", direction = Direction.INCOMING)
+	@RelatedTo(type = RelationshipType.IS_ENTITLET, direction = Direction.INCOMING)
 	private Set<EduPerson> persons;
 
 	@Deprecated
