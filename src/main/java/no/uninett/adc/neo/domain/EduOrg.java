@@ -16,6 +16,15 @@ public class EduOrg extends EduObject {
 	@RelatedTo(type = RelationshipType.WORKS_FOR_ORG, direction = Direction.INCOMING)
 	private Set<EduPerson> employees = new HashSet<EduPerson>();
 
+	@Deprecated
+	public EduOrg() {
+
+	}
+
+	public EduOrg(String orgNIN) {
+		this.orgNIN = orgNIN;
+	}
+
 	public void addEmployee(final EduPerson emp) {
 		employees.add(emp);
 	}
