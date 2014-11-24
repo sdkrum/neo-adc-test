@@ -38,7 +38,7 @@ public class LdapFetcher {
 
 	public EduOrg readEduOrg() {
 		EduOrg org = getOrg();
-		List<EduPerson> persons = getPersons();
+		List<EduPerson> persons = getPersons(org);
 		Set<EduPerson> setP = new HashSet<EduPerson>(persons);
 		org.setEmployees(setP);
 		return org;
@@ -73,10 +73,10 @@ public class LdapFetcher {
 		return getLdapTemplate().search(query, new OrgAttributesMapper());
 	}
 
-	private List<EduPerson> getPersons() {
+	private List<EduPerson> getPersons(EduOrg org) {
 		LdapQuery query = query().base(getSearchBase())
 				.attributes(listPersonAttributes()).filter(getPersonFilter());
-		return getLdapTemplate().search(query, new PersonAttributesMapper());
+		return getLdapTemplate().search(query, new PersonAttributesMapper(org));
 	}
 
 	private Filter getPersonFilter() {
@@ -118,6 +118,11 @@ public class LdapFetcher {
 	}
 
 	private class PersonAttributesMapper implements AttributesMapper<EduPerson> {
+		private EduOrg org;
+
+		public PersonAttributesMapper(EduOrg org) {
+			this.org = org;
+		}
 
 		public EduPerson mapFromAttributes(Attributes attrs)
 				throws NamingException {
@@ -129,6 +134,7 @@ public class LdapFetcher {
 					person.addAttribute(attName, att);
 				}
 			}
+			person.setOrg(org);
 			return person;
 		}
 	}
